@@ -4,6 +4,7 @@ import {
    signInWithRedirect,
    signInWithPopup,
    GoogleAuthProvider,
+   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -19,14 +20,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
 
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
-provider.setCustomParameters({
+googleProvider.setCustomParameters({
    prompt: "select_account",
 });
 
 export const auth = getAuth(firebaseApp);
-export const signinWithGooglePopup = () => signInWithPopup(auth, provider);
+
+export const signinWithGooglePopup = () =>
+   signInWithPopup(auth, googleProvider);
+
+export const signInWithGoogleRedirect = () =>
+   signInWithRedirect(auth, googleProvider);
 
 /**
  * Instantiate the firestore
@@ -36,8 +42,14 @@ export const db = getFirestore();
 /**
  * Create user document from the auth action
  * @param {*} userAuth
+ * @param {*} additionalInformation - used to override auth
  */
-export const createUserDocumentFromAuth = async (userAuth) => {
+export const createUserDocumentFromAuth = async (
+   userAuth,
+   additionalInformation = {}
+) => {
+   if (!userAuth) return;
+
    const userDocRef = doc(db, "users", userAuth.uid);
    console.log(userDocRef);
 
@@ -55,6 +67,7 @@ export const createUserDocumentFromAuth = async (userAuth) => {
             displayName,
             email,
             createdAt,
+            ...additionalInformation,
          });
       } catch (err) {
          console.log(err);
@@ -62,4 +75,10 @@ export const createUserDocumentFromAuth = async (userAuth) => {
    }
 
    return userDocRef;
+};
+
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+   if (!email && !password) return;
+
+   return await createUserWithEmailAndPassword(auth, email, password);
 };
