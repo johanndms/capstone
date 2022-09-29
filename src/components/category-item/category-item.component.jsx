@@ -1,7 +1,17 @@
 import "./category-item.styles.scss";
+import { PropTypes } from "prop-types";
 
-const CategoryItem = (props) => {
-   const { title, imageUrl } = props.category;
+/**
+ * This function build and return one category item using the title and imageUrl.
+ * The user should be able to click on the category and redirected to that specific
+ * route/page
+ *
+ * @param {category}
+ * @returns JSX for one category item
+ *
+ */
+const CategoryItem = ({ category }) => {
+   const { title, imageUrl } = category;
 
    return (
       <div className="category-container">
@@ -14,6 +24,13 @@ const CategoryItem = (props) => {
          </div>
       </div>
    );
+};
+
+CategoryItem.propTypes = {
+   category: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      imageUrl: PropTypes.string.isRequired,
+   }),
 };
 
 export default CategoryItem;

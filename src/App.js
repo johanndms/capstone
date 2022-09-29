@@ -9,6 +9,7 @@ const Shop = () => {
 const Hats = () => {
    return <h1>I'm the hat's page</h1>;
 };
+
 const App = () => {
    return (
       <Routes>
