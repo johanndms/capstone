@@ -1,6 +1,6 @@
-import "./directory.styles.scss";
-import CategoryItem from "../category-item/category-item.component";
-import { PropTypes } from "prop-types";
+import './directory.styles.scss';
+import CategoryItem from '../category-item/category-item.component';
+import { PropTypes } from 'prop-types';
 
 /**
  * This function will build and return the JSX for the home page where
