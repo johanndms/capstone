@@ -13,8 +13,9 @@ const App = () => {
    return (
       <Routes>
          <Route path='/' element={<Navigation />}>
-            <Route index element={<Home />} />
-            <Route path='shop' element={<Shop />} />
+            <Route index element={<Home />} />{' '}
+            {/* this will render the Home with / */}
+            <Route path='shop/*' element={<Shop />} />
             <Route path='hats' element={<Hats />} />
             <Route path='auth' element={<Authentication />} />
             <Route path='checkout' element={<Checkout />} />

@@ -1,5 +1,6 @@
-import './category-item.styles.scss';
+import './directory-item.styles.scss';
 import { PropTypes } from 'prop-types';
+import { Link } from 'react-router-dom';
 
 /**
  * This function build and return one category item using the title and imageUrl. The user should be able to click on the category and redirected to that specific
@@ -11,13 +12,14 @@ const CategoryItem = ({ category }) => {
    const { title, imageUrl } = category;
 
    return (
-      <div className='category-container'>
+      <div className='directory-item-container'>
          <div
             className='background-image'
-            style={{ backgroundImage: `url(${imageUrl})` }}
-         ></div>
-         <div className='category-body-container'>
-            <h2>{title}</h2>
+            style={{ backgroundImage: `url(${imageUrl})` }}></div>
+         <div className='directory-body-container'>
+            <Link to={`/shop/${title}`}>
+               <h2>{title}</h2>
+            </Link>
             <p>Shop now</p>
          </div>
       </div>

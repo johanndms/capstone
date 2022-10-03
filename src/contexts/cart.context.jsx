@@ -119,6 +119,10 @@ export const CartProvider = ({ children }) => {
          return cartTotal + cartItem.quantity;
       }, 0);
       setCartCount(totalItems);
+   }, [cartItems]);
+
+   /** It's good practice to keep one task per useEffect even though the dependancy is the same!! */
+   useEffect(() => {
       const totalPrice = cartItems
          .map((cartItem) => cartItem.quantity * cartItem.price)
          .reduce((prev, curr) => prev + curr, 0);

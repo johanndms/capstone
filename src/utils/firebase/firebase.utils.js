@@ -9,7 +9,16 @@ import {
    signOut,
    onAuthStateChanged,
 } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import {
+   getFirestore,
+   doc,
+   getDoc,
+   setDoc,
+   collection,
+   writeBatch,
+   query,
+   getDocs,
+} from 'firebase/firestore';
 
 const firebaseConfig = {
    apiKey: 'AIzaSyDHLWE4DI9bZ2hmRMTSbDbGpoGArkIIIY8',
@@ -48,6 +57,49 @@ export const signInWithGoogleRedirect = () =>
  *
  */
 export const db = getFirestore();
+
+/**
+ * This function will add a new collection with enclosed documents and items to the firestore DB;
+ *
+ * @param collectionKey - Collection key - ie. categories or users
+ * @param objectsToAdd - the array of documents you want to add to this collection
+ * @param documentNameField - the field in the objectToAdd that denotes the document name - ie. 'title'
+ *
+ */
+export const addCollectionAndDocuments = async (
+   collectionKey,
+   objectsToAdd,
+   documentNameField,
+) => {
+   const collectionRef = collection(db, collectionKey);
+   const batch = writeBatch(db);
+
+   objectsToAdd.forEach((object) => {
+      const docRef = doc(
+         collectionRef,
+         object[documentNameField].toLowerCase(),
+      );
+      batch.set(docRef, object);
+   });
+
+   await batch.commit();
+};
+
+export const getCategoriesAndDocuments = async (collectionKey) => {
+   const collectionRef = collection(db, collectionKey);
+
+   const q = query(collectionRef);
+
+   const querySnapShot = await getDocs(q);
+
+   const categoryMap = querySnapShot.docs.reduce((acc, docSnapShot) => {
+      const { title, items } = docSnapShot.data();
+      acc[title.toLowerCase()] = items;
+      return acc;
+   }, {});
+
+   return categoryMap;
+};
 
 /**
  * Firebase - Create user document from the auth action
