@@ -5,12 +5,18 @@ import './checkout-item.styles.scss';
 
 const CheckoutItem = ({ cartItem }) => {
    const { imageUrl, name, quantity, price } = cartItem;
-   const { addItemToCart, removeItemFromCart, removeRowFromCart } =
+   const { addItemToCart, removeItemFromCart, clearItemFromCart } =
       useContext(CartContext);
 
+   /**
+    * @remark
+    * We use click handlers like this because it's easier to maintain and won't need to
+    * search through the jsx code to change them, and secondly we can optimise the code later using this
+    *
+    */
    const addProductToCart = () => addItemToCart(cartItem);
    const removeProductFromCart = () => removeItemFromCart(cartItem);
-   const removeProductRowFromCart = () => removeRowFromCart(cartItem);
+   const removeProductRowFromCart = () => clearItemFromCart(cartItem);
 
    return (
       <div className='checkout-item-container'>
@@ -20,17 +26,17 @@ const CheckoutItem = ({ cartItem }) => {
          <div className='name'>{name}</div>
          <div className='quantity'>
             <span className='arrow' onClick={removeProductFromCart}>
-               &lang;
+               &#10094;
             </span>
             <div className='value'>{quantity}</div>
             <span className='arrow' onClick={addProductToCart}>
-               &rang;
+               &#10095;
             </span>
          </div>
 
          <div className='price'>{quantity * price}</div>
          <div className='remove-button' onClick={removeProductRowFromCart}>
-            &times;
+            &#10005;
          </div>
       </div>
    );

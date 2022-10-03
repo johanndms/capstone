@@ -37,15 +37,15 @@ const addProductToCart = (cartItems, productToAdd) => {
    }
 };
 
-const removeProductFromCart = (cartItems, productToRemove) => {
+const removeCartItem = (cartItems, cartItemToRemove) => {
    /**
     * Check if we have this product to remove in the cartItems and if so remove it
     *
     */
-   if (cartItems.some((cartItem) => cartItem.id === productToRemove.id)) {
+   if (cartItems.some((cartItem) => cartItem.id === cartItemToRemove.id)) {
       return cartItems
          .map((cartItem) =>
-            cartItem.id === productToRemove.id
+            cartItem.id === cartItemToRemove.id
                ? { ...cartItem, quantity: cartItem.quantity - 1 }
                : cartItem,
          )
@@ -55,13 +55,15 @@ const removeProductFromCart = (cartItems, productToRemove) => {
    }
 };
 
-const removeProductRowFromCart = (cartItems, productToRemove) => {
+const clearCartItem = (cartItems, cartItemToClear) => {
    const newCartItems = [...cartItems];
    newCartItems.splice(
-      newCartItems.findIndex((cartItem) => cartItem.id === productToRemove.id),
+      newCartItems.findIndex((cartItem) => cartItem.id === cartItemToClear.id),
       1,
    );
    return newCartItems;
+   // could also do the following - this filter would return all the items except the one to clear.
+   // return cartItems.filter((cartItem) => cartItem.id !== cartItemToClear.id);
 };
 
 export const CartContext = createContext({
@@ -71,7 +73,7 @@ export const CartContext = createContext({
    isCartOpen: false,
    addItemToCart: () => null,
    removeItemFromCart: () => null,
-   removeRowFromCart: () => null,
+   clearItemFromCart: () => null,
    setIsCartOpen: () => null,
    setCartCount: () => null,
 });
@@ -87,13 +89,13 @@ export const CartProvider = ({ children }) => {
       setCartItems(newCartItems);
    };
 
-   const removeItemFromCart = (productToRemove) => {
-      const newCartItems = removeProductFromCart(cartItems, productToRemove);
+   const removeItemFromCart = (cartItemToRemove) => {
+      const newCartItems = removeCartItem(cartItems, cartItemToRemove);
       setCartItems(newCartItems);
    };
 
-   const removeRowFromCart = (productToRemove) => {
-      const newCartItems = removeProductRowFromCart(cartItems, productToRemove);
+   const clearItemFromCart = (cartItemToClear) => {
+      const newCartItems = clearCartItem(cartItems, cartItemToClear);
       setCartItems(newCartItems);
    };
 
@@ -104,7 +106,7 @@ export const CartProvider = ({ children }) => {
       isCartOpen,
       addItemToCart,
       removeItemFromCart,
-      removeRowFromCart,
+      clearItemFromCart,
       setIsCartOpen,
       setCartCount,
    };
