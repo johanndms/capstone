@@ -121,7 +121,7 @@ export const CartProvider = ({ children }) => {
       }, 0);
 
       const payload = {
-         cartItems,
+         cartItems: newCartItems,
          cartCount: newCartCount,
          cartTotal: newCartTotal,
       };
