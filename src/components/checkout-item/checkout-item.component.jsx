@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import { CartContext } from '../../contexts/cart.context';
 import { PropTypes } from 'prop-types';
 import {
    CheckoutItemContainer,
@@ -11,11 +9,18 @@ import {
    Value,
    RemoveButton,
 } from './checkout-item.styles';
+import {
+   addItemToCart,
+   removeItemFromCart,
+   clearItemFromCart,
+} from '../../store/cart/cart.action';
+import { selectCartItems } from '../../store/cart/cart.selector';
+import { useSelector, useDispatch } from 'react-redux';
 
 const CheckoutItem = ({ cartItem }) => {
+   const dispatch = useDispatch();
    const { imageUrl, name, quantity, price } = cartItem;
-   const { addItemToCart, removeItemFromCart, clearItemFromCart } =
-      useContext(CartContext);
+   const cartItems = useSelector(selectCartItems);
 
    /**
     * @remark
@@ -23,9 +28,12 @@ const CheckoutItem = ({ cartItem }) => {
     * search through the jsx code to change them, and secondly we can optimise the code later using this
     *
     */
-   const addProductToCart = () => addItemToCart(cartItem);
-   const removeProductFromCart = () => removeItemFromCart(cartItem);
-   const removeProductRowFromCart = () => clearItemFromCart(cartItem);
+   const addProductToCartHandler = () =>
+      dispatch(addItemToCart(cartItems, cartItem));
+   const removeProductFromCartHandler = () =>
+      dispatch(removeItemFromCart(cartItems, cartItem));
+   const removeProductRowFromCartHandler = () =>
+      dispatch(clearItemFromCart(cartItems, cartItem));
 
    return (
       <CheckoutItemContainer>
@@ -34,13 +42,13 @@ const CheckoutItem = ({ cartItem }) => {
          </ImageContainer>
          <Name>{name}</Name>
          <Quantity>
-            <Arrow onClick={removeProductFromCart}>&#10094;</Arrow>
+            <Arrow onClick={removeProductFromCartHandler}>&#10094;</Arrow>
             <Value>{quantity}</Value>
-            <Arrow onClick={addProductToCart}>&#10095;</Arrow>
+            <Arrow onClick={addProductToCartHandler}>&#10095;</Arrow>
          </Quantity>
 
          <Price>{quantity * price}</Price>
-         <RemoveButton onClick={removeProductRowFromCart}>
+         <RemoveButton onClick={removeProductRowFromCartHandler}>
             &#10005;
          </RemoveButton>
       </CheckoutItemContainer>
